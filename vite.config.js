@@ -15,9 +15,10 @@ export default defineConfig(({ mode }) => ({
     {
       name: 'github-pages-404',
       closeBundle() {
-        const indexPath = 'dist/index.html'
-        if (existsSync(indexPath)) {
-          copyFileSync(indexPath, 'dist/404.html')
+        const builtIndex = 'dist/index.dev.html'
+        if (existsSync(builtIndex)) {
+          copyFileSync(builtIndex, 'dist/index.html')
+          copyFileSync(builtIndex, 'dist/404.html')
         }
       },
     },
@@ -47,6 +48,9 @@ export default defineConfig(({ mode }) => ({
   base: mode === 'pages' ? GITHUB_BASE : './',
   build: {
     assetsDir: 'assets',
-    outDir: 'dist'
+    outDir: 'dist',
+    rollupOptions: {
+      input: fileURLToPath(new URL('./index.dev.html', import.meta.url)),
+    },
   },
 }))
